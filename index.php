@@ -13,6 +13,10 @@
     <!-- CSS -->
     <link rel="stylesheet" type="text/css" href="styling.css">
 
+    <!-- Arvo Font -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Arvo&display=swap" rel="stylesheet"> 
+
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -45,6 +49,21 @@
         </div>
       </div>
     </nav>
+
+    <!-- Jumbotron with sign-up button -->
+    <div class="jumbotron">
+      <h1>Online Notes App</h1>
+      <p>Your notes with you wherever you go.</p>
+      <p>Easy to use, protects all your notes!</p>
+      <button type="button" class="btn btn-lg green signup">Sign up-It's free</button>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+      <div class="container">
+        <p>BorgeVijay07 Online Notes App Cpoyright &copy; 2021-<?php $today = date("Y"); echo$today ?>.</i></p>
+      </div>
+    </div>
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
