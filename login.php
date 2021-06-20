@@ -1,25 +1,87 @@
-<!-- Start session -->
-<!-- Connect to the database  -->
+<?php
+// <!-- Start session -->
+session_start();
+// <!-- Connect to the database  -->
+include('connection.php');
 
-<!-- Check user inputs -->
-    <!-- Define error message  -->
-    <!-- Get email and password  -->
-    <!-- Store errors in errors variable -->
-    <!-- If there are any errors  -->
-        <!-- print error message  -->
-    <!-- else: No errors  -->
-        <!-- Prepare variables for the query -->
-        <!-- Run query: Check combination of email & password exists  -->
-        <!-- If email & password dont match print error -->
-        <!-- else  -->
-            <!-- log th user in: Set session variables -->
-            <!-- If rember me is not checked  -->
-                <!-- print "success" -->
-            <!-- else  -->
-                <!-- Create two variables $authentificator1 and $authentificator2 -->
-                <!-- store them in cookie  -->
-                <!-- Run query to store them in remember me table  -->
-                <!-- If query unsuccessful  -->
-                    <!-- print error -->
-                <!-- else  -->
-                    <!-- print "success" -->
+// <!-- Check user inputs -->
+//     <!-- Define error message  -->
+$missingEmail = '<p><strong>Please enter your email address!</strong></p>';
+$missingPassword = '<p><strong>Please enter your password!</strong></p>';
+
+//     <!-- Get email and password  -->
+//     <!-- Store errors in errors variable -->
+$email = '';
+$errors = '';
+$password = '';
+$resultMessage = '';
+$result = '';
+
+//Get email
+if(empty($_POST["loginemail"])){
+    $errors .= $missingEmail;
+}else{
+    $email = filter_var($_POST["loginemail"], FILTER_SANITIZE_EMAIL);
+}
+
+//Get password
+if(empty($_POST["loginpassword"])){
+    $errors .= $missingPassword;
+}else{
+    $password = filter_var($_POST["loginpassword"], FILTER_SANITIZE_STRING);
+}
+
+//     <!-- If there are any errors  -->
+//         <!-- print error message  -->
+if($errors){
+    $resultMessage = '<div class="alert alert-danger">'.$errors.'</div>';
+    echo $resultMessage;
+}else{
+    //     <!-- else: No errors  -->
+    //         <!-- Prepare variables for the query -->
+    $email = mysqli_real_escape_string($link, $email);
+    $password = mysqli_real_escape_string($link, $password);
+    // $password = md5($password);
+    $password = hash('sha256',$password);
+
+
+    //         <!-- Run query: Check combination of email & password exists  -->
+    $sql = "SELECT * FROM users WHERE email='$email' AND password='$password' AND activation='activated'";
+    $result = mysqli_query($link, $sql);
+    if(!$result){
+        echo '<div class="alert alert-danger">Error running the query!</div>';
+        exit;
+    }
+
+    //         <!-- If email & password dont match print error -->
+    $count = mysqli_num_rows($result);
+    if($count !== 1){
+        echo '<div class="alert alert-danger">Wrong Username or Password!</div>';
+    }else{
+        //         <!-- else  -->
+        //             <!-- log th user in: Set session variables -->
+        $row = mysqli_fetch_array($result, MYSQLI_ASSOC);   
+        $_SESSION['user_id'] = $row['user_id'];
+        $_SESSION['username'] = $row['username'];
+        $_SESSION['email'] = $row['email'];
+
+        //<!-- If rember me is not checked  -->
+        if(empty($_POST['rememberme'])){
+            //                 <!-- print "success" -->
+            echo "success";
+        }else{
+            //             <!-- else  -->
+        }
+    }
+}
+    
+
+
+//                 <!-- Create two variables $authentificator1 and $authentificator2 -->
+//                 <!-- store them in cookie  -->
+//                 <!-- Run query to store them in remember me table  -->
+//                 <!-- If query unsuccessful  -->
+//                     <!-- print error -->
+//                 <!-- else  -->
+//                     <!-- print "success" -->
+?>
