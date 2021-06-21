@@ -61,6 +61,7 @@ if(empty($_POST["password"])){
 if($errors){
     $resultMessage = '<div class="alert alert-danger">'.$errors.'</div>';
     echo $resultMessage;
+    exit;
 }
 
 // <!-- No errors -->
