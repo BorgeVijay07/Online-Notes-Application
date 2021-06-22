@@ -110,6 +110,12 @@ if(!isset($_SESSION['user_id'])){
 
     <!-- Container -->
     <div class="container" id="container">
+        <!-- Alert Message -->
+        <div id="alert" class="alert alert-danger collapse">
+          <a class="close" data-dismiss="alert">&times;</a>
+          <p id="alertContent"></p>
+        </div>
+        
         <div class="row">
             <div class="col-md-offset-3 col-md-6">
                 <div class="buttons">
