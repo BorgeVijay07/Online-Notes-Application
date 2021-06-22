@@ -9,6 +9,7 @@ $(function(){
         success: function(data){
             $('#notes').html(data);
             clickonNote();
+            clickonDelete();
         },
         error: function(){
             $('#alertContent').text("There was an error with the Ajax call. Please try again later.");
@@ -71,6 +72,7 @@ $(function(){
                 $('#notes').html(data);
                 showHide(["#addNote", "#edit", "#notes" ],["#allnotes", "#notePad"]);
                 clickonNote();
+                clickonDelete();
             },
             error: function(){
                 $('#alertContent').text("There was an error with the Ajax call. Please try again later.");
@@ -80,7 +82,28 @@ $(function(){
     });
 
     //click on done after editing: load notes again
+    $('#done').click(function(){
+        //switch to non edit mode
+        editMode = false;
+
+        //
+        $(".noteheader").removeClass("col-xs-7 col-sm-9");
+
+        //show hide function
+        showHide(["#edit"],[this, ".delete"]);
+    });
+
     //click on edit: go to edit mode (show delete button, ...)
+    $("#edit").click(function(){
+        //switch to edit mode
+        editMode = true;
+
+        //reduce the width of notes
+        $(".noteheader").addClass("col-xs-7 col-sm-9");
+
+        //show hide function
+        showHide(["#done", ".delete"],[this]);
+    });
 
     //functions
         //click on a note
@@ -103,6 +126,31 @@ $(function(){
         }
 
         //click on delete
+        function clickonDelete(){
+            $(".delete").click(function(){
+                var deleteButton = $(this);
+                //send ajax call to delete note
+                $.ajax({
+                    url: "deletenote.php",
+                    type: "POST",
+                    //we need to send the id of the note to be deleted
+                    data: {id:deleteButton.next().attr("id")},
+                    success: function(data){
+                        if(data == 'error'){
+                            $('#alertContent').text("There was an issue deleting the note from the database!.");
+                            $('#alert').fadeIn();
+                        }else{
+                            //remove containing div
+                            deleteButton.parent().remove();
+                        }
+                    },
+                    error: function(){
+                        $('#alertContent').text("There was an error with the Ajax call. Please try again later.");
+                        $('#alert').fadeIn();
+                    }
+                });
+            });
+        };
 
         //show hide function
         function showHide(array1, array2){
