@@ -1,6 +1,13 @@
 $(function(){
     //define variables
     //load notes om page: Ajax call to loadnotes.php
+    $.ajax({
+        url: "loadnotes.php",
+        success: function(data){
+            $('#notes').html(data);
+        }
+    });
+
     //Add a new note: Ajax call to another file createnote.php
     //type note: Ajax call to updatenote.php
     // click on all notes button
