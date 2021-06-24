@@ -17,7 +17,7 @@ if($count ==1){
   $username = $row['username'];
   $email = $row['email'];
 }else{
-  echo "There was an error receiving the username and email from the database.";
+  echo "<div class='alert alert-danger'>There was an error receiving the username and email from the database.</div>";
 }
 ?>
 
