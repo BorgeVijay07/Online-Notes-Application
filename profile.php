@@ -1,3 +1,26 @@
+<?php
+session_start();
+if(!isset($_SESSION['user_id'])){
+  header("location: index.php");
+}
+
+include('connection.php');
+
+$user_id = $_SESSION['user_id'];
+
+//get username and email
+$sql = "SELECT * FROM users WHERE user_id='$user_id'";
+$result = mysqli_query($link, $sql);
+$count = mysqli_num_rows($result);
+if($count ==1){
+  $row = mysqli_fetch_array($result, MYSQLI_ASSOC);
+  $username = $row['username'];
+  $email = $row['email'];
+}else{
+  echo "There was an error receiving the username and email from the database.";
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -70,14 +93,14 @@
         </div>
         <div class='navbar-collapse collapse' id="navbarCollapse">
           <ul class="nav navbar-nav">
-            <li><a href="#">Profile</a></li>
+            <li class="active"><a href="profile.php">Profile</a></li>
             <li><a href="#">Help</a></li>
             <li><a href="#">Contact us</a></li>
-            <li class="active"><a href="#">My Notes</a></li>
+            <li><a href="mainpageloggedin.php">My Notes</a></li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="#">Logged in as <b>username</b></a></li>
-            <li><a href="#">Log out</a></li>
+            <li><a href="#">Logged in as <b><?php echo $username;?></b></a></li>
+            <li><a href="index.php?logout=1">Log out</a></li>
           </ul>
         </div>
       </div>
@@ -92,11 +115,11 @@
                     <table class="table table-hover table-condensed table-bordered">
                         <tr data-target="#updateusername" data-toggle="modal">
                             <td>Username</td>
-                            <td>value</td>
+                            <td><?php echo $username;?></td>
                         </tr>
                         <tr data-target="#updateemail" data-toggle="modal">
                             <td>Email</td>
-                            <td>value</td>
+                            <td><?php echo $email;?></td>
                         </tr>
                         <tr data-target="#updatepassword" data-toggle="modal">
                             <td>Password</td>
@@ -119,12 +142,12 @@
             </div>
             <div class="modal-body">
 
-            <!-- Login message from PHP file -->
-              <div id="loginMessage"></div>
+            <!-- Update username message from PHP file -->
+              <div id="updateusernameMessage"></div>
 
               <div class="form-group">
                 <label for="username">Username:</label>
-                <input class="form-control" type="text" name="username" id="username" maxlength="30" value="username value">
+                <input class="form-control" type="text" name="username" id="username" maxlength="30" value="<?php echo $username;?>">
               </div>
             </div>
             <div class="modal-footer">
@@ -147,12 +170,12 @@
             </div>
             <div class="modal-body">
 
-            <!-- Login message from PHP file -->
-              <div id="loginMessage"></div>
+            <!-- Update email message from PHP file -->
+              <div id="updateemailMessage"></div>
 
               <div class="form-group">
                 <label for="email">Email:</label>
-                <input class="form-control" type="email" name="email" id="email" maxlength="50" value="email value">
+                <input class="form-control" type="email" name="email" id="email" maxlength="50" value="<?php echo $email;?>">
               </div>
             </div>
             <div class="modal-footer">
@@ -175,8 +198,8 @@
             </div>
             <div class="modal-body">
 
-            <!-- Login message from PHP file -->
-              <div id="loginMessage"></div>
+            <!-- Update password message from PHP file -->
+              <div id="updatepasswordMessage"></div>
 
               <div class="form-group">
                 <label for="currentpassword" class="sr-only">Your Current Password:</label>
@@ -211,5 +234,6 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="js/bootstrap.min.js"></script>
+    <script src="profile.js"></script>
   </body>
 </html>
